@@ -52,9 +52,10 @@ function App() {
   };
 
   const fetchMessages = () => {
-    return axios.get("http://localhost:8080/chat/1").then((response) => {
-      setMessages(response.data);
-    });
+    const response = axios.get("http://localhost:8080/chat/1");
+    const data = response.data;
+
+    sendMessage(data);
   };
 
   const disconnect = () => {
