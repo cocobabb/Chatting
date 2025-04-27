@@ -1,19 +1,32 @@
 package com.chat.dto;
 
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "chatting_content") // 실제 몽고 DB 컬렉션 이름
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessage {
-    private Long id;
-    private String name;
-    private String message;
+    @Id
+    private ObjectId id;
+    private Long roomId;
+    private String content;
+    private Long writerId;
 
-    public ChatMessage(Long id, String name, String message) {
-        this.id = id;
-        this.name = name;
-        this.message = message;
+
+    public static ChatMessage from(ChatMessage chatMessage) {
+        return ChatMessage.builder()
+            .roomId(chatMessage.getRoomId())
+            .content(chatMessage.getContent())
+            .writerId(chatMessage.getWriterId())
+            .build();
     }
 }
 

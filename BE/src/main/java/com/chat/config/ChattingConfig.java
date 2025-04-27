@@ -12,15 +12,15 @@ public class ChattingConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // stomp 접속 주소 url = ws://localhost:8080/ws, 프로토콜이 http가 아니다!
-        registry.addEndpoint("/ws") // 연결될 엔드포인트
+        // stomp 접속 주소 url = ws://localhost:8080/ws-stomp, 프로토콜이 http가 아니다!
+        registry.addEndpoint("/ws-stomp") // 연결될 엔드포인트
             .setAllowedOrigins("*");
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 메시지를 구독(수신)하는 요청 엔드포인트
-        registry.enableSimpleBroker("/sub");
+        registry.enableSimpleBroker("/sub/chatroom");
 
         // 메시지를 발행(송신)하는 엔드포인트
         registry.setApplicationDestinationPrefixes("/pub");
