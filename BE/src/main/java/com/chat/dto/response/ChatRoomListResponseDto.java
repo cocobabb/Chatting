@@ -7,14 +7,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ResponseChatRoomListDto {
-    private List<ResponseChatRoomDto> chatRoomList;
+public class ChatRoomListResponseDto {
+    private List<ChatRoomResponseDto> chatRoomList;
 
-    public static ResponseChatRoomListDto from(List<ChatRoom> chatRooms) {
-        return ResponseChatRoomListDto.builder()
+    public static ChatRoomListResponseDto from(List<ChatRoom> chatRooms) {
+        return ChatRoomListResponseDto.builder()
             .chatRoomList(
                 chatRooms.stream().map(
-                    ResponseChatRoomDto::from
+                    ChatRoomResponseDto::from
                 ).toList()
             )
             .build();

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class RequestChatRoomDto {
+public class ChatRoomRequestDto {
 
     @NotBlank
     private String title;

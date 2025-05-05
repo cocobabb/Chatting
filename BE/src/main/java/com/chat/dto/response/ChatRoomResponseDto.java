@@ -6,12 +6,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ResponseChatRoomDto {
+public class ChatRoomResponseDto {
     private final Long id;
     private final String title;
 
-    public static ResponseChatRoomDto from(ChatRoom chatRoom) {
-        return ResponseChatRoomDto.builder()
+    public static ChatRoomResponseDto from(ChatRoom chatRoom) {
+        return ChatRoomResponseDto.builder()
             .id(chatRoom.getId())
             .title(chatRoom.getTitle())
             .build();

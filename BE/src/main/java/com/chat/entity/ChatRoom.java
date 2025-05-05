@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,7 @@ public class ChatRoom extends BaseTimeEntity {
 
 
     @Builder
-    public ChatRoom(String title, Date createDate) {
+    public ChatRoom(String title) {
         this.title = title;
     }
 }

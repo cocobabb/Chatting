@@ -1,8 +1,8 @@
 package com.chat.service;
 
-import com.chat.dto.request.RequestChatRoomDto;
-import com.chat.dto.response.ResponseChatRoomDto;
-import com.chat.dto.response.ResponseChatRoomListDto;
+import com.chat.dto.request.ChatRoomRequestDto;
+import com.chat.dto.response.ChatRoomResponseDto;
+import com.chat.dto.response.ChatRoomListResponseDto;
 import com.chat.entity.ChatRoom;
 import com.chat.repository.ChatRoomRepository;
 import java.util.List;
@@ -18,16 +18,16 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     @Transactional
-    public ResponseChatRoomDto createChatRoom(RequestChatRoomDto requestDto) {
+    public ChatRoomResponseDto createChatRoom(ChatRoomRequestDto requestDto) {
         ChatRoom chatRoom = requestDto.toEntity();
         chatRoomRepository.save(chatRoom);
 
-        return ResponseChatRoomDto.from(chatRoom);
+        return ChatRoomResponseDto.from(chatRoom);
     }
 
-    public ResponseChatRoomListDto findChatRoomList() {
+    public ChatRoomListResponseDto findChatRoomList() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
 
-        return ResponseChatRoomListDto.from(chatRooms);
+        return ChatRoomListResponseDto.from(chatRooms);
     }
 }
