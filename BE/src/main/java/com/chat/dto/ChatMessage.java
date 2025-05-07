@@ -1,6 +1,7 @@
 package com.chat.dto;
 
 import jakarta.persistence.Id;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,15 +18,19 @@ public class ChatMessage {
     @Id
     private ObjectId id;
     private Long roomId;
+    private String username;
     private String content;
     private Long writerId;
+    private Date createdAt;
 
 
     public static ChatMessage from(ChatMessage chatMessage) {
         return ChatMessage.builder()
             .roomId(chatMessage.getRoomId())
+            .username(chatMessage.getUsername())
             .content(chatMessage.getContent())
             .writerId(chatMessage.getWriterId())
+            .createdAt(chatMessage.getCreatedAt())
             .build();
     }
 }

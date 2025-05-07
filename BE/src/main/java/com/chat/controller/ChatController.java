@@ -3,7 +3,7 @@ package com.chat.controller;
 import com.chat.dto.ChatMessage;
 import com.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,11 +28,13 @@ public class ChatController {
     /**
      * 메시지 송신 및 수신
      * **/
-    @MessageMapping("/message")
-   public void receiveMessage(ChatMessage ChatMessage) {
-        System.out.println("메세지 저장하는 컨트롤러 진입");
-        chatService.saveChatMessageAndSend(ChatMessage);
-    }
+//    @MessageMapping("/message")
+//   public void receiveMessage(ChatMessage ChatMessage) {
+
+//    public type saveMessage(ChatMessage chatMessage){
+//        System.out.println("메세지 저장하는 컨트롤러 진입");
+//        chatService.saveChatMessage(chatMessage);
+//    }
 
 
 }

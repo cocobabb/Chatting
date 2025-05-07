@@ -9,8 +9,12 @@ import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,15 +34,24 @@ public class JwtTokenProvider {
         String username = authentication.getName();
         Claims claims = Jwts.claims().setSubject(username);
 
+        // 권한(authorities)을 문자열 리스트로 변환
+        List<String> roles = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList());
+
+
+        claims.put("roles", roles);
+
+
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidityInMillis);
 
         return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(validity)
+            .setClaims(claims) // payload 설정
+            .setIssuedAt(now) // 발급 시간
+            .setExpiration(validity) // 만료 시간
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
-            .compact();
+            .compact(); // JWT 문자열 형식으로 변환
     }
 
     // 토큰 위조 확인
@@ -52,11 +65,13 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token);
             return true;
         }catch (JwtException | IllegalArgumentException e) {
+            System.out.printf("JWT validation failed: %s", e.getMessage());
             return false;
         }
         
     }
-    
+
+
     public String getUsername(String token) {
         return Jwts.parserBuilder()
             .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -66,4 +81,25 @@ public class JwtTokenProvider {
             // 본문 가져와 subject에 할당한 username 가져오기
             .getSubject();
     }
+
+
+
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<GrantedAuthority> getAuthorities(Claims claims) {
+        List<String> roles = (List<String>) claims.get("roles");
+        return roles.stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+
+
 }
