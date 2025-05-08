@@ -1,7 +1,14 @@
 import React from "react";
 import { RouterProvider } from "react-router-dom";
-import ChatRoomList from "./ChatRoomList";
 import router from "./index";
+
+import { Provider } from "react-redux";
+import store from "./store/store";
+
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />;
+    </Provider>
+  );
 }
