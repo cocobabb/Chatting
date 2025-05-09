@@ -21,7 +21,6 @@ public class ChatMessage {
     private String username;
     private String content;
     private Long writerId;
-    private Date createdAt;
 
 
     public static ChatMessage from(ChatMessage chatMessage) {
@@ -29,8 +28,6 @@ public class ChatMessage {
             .roomId(chatMessage.getRoomId())
             .username(chatMessage.getUsername())
             .content(chatMessage.getContent())
-            .writerId(chatMessage.getWriterId())
-            .createdAt(chatMessage.getCreatedAt())
             .build();
     }
 }

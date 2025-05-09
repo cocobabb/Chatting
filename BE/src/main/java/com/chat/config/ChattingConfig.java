@@ -22,10 +22,10 @@ public class ChattingConfig {
     public HandlerMapping webSocketMapping() {
         Map<String, WebSocketHandler> map = new HashMap<>();
 
-        map.put("/ws/chat", chatWebSocketHandler);
+        map.put("/ws/chat/**", chatWebSocketHandler);
 
         SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
-        mapping.setOrder(10);
+        mapping.setOrder(-1); //우선순위 높게
         mapping.setUrlMap(map);
 
         return mapping;

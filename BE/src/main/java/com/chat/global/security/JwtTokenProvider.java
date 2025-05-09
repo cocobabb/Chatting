@@ -34,7 +34,7 @@ public class JwtTokenProvider {
         String username = authentication.getName();
         Claims claims = Jwts.claims().setSubject(username);
 
-        // 권한(authorities)을 문자열 리스트로 변환
+        // 권한(authorities)을 문자열 리스트로 변환 [ADMIN, USER]
         List<String> roles = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
@@ -65,6 +65,7 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token);
             return true;
         }catch (JwtException | IllegalArgumentException e) {
+            System.out.println("ValidateToken exception 발생");
             System.out.printf("JWT validation failed: %s", e.getMessage());
             return false;
         }

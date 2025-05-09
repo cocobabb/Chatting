@@ -23,6 +23,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
+        System.out.println("ChatWebSocketHandler Access");
         String uri = session.getHandshakeInfo().getUri().toString();
         String token = UriComponentsBuilder.fromUriString(uri).build().getQueryParams().getFirst("token");
         String path = session.getHandshakeInfo().getUri().getPath(); // 예: /ws/chat/room123
@@ -30,6 +31,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 
         // 인증 실패 시 연결 종료
         if(!jwtTokenProvider.validateToken(token)) {
+            System.out.println("유효하지 않은 토큰임");
             return session.close();
         }
 
@@ -47,7 +49,6 @@ public class ChatWebSocketHandler implements WebSocketHandler {
                     .roomId(Long.valueOf(roomId))
                     .username(username)
                     .content(message)
-                    .createdAt(new Date())
                     .build();
                 Mono<Void> saveTask = chatService.saveChatMessage(chatMessage);
                 // 브로드캐스트

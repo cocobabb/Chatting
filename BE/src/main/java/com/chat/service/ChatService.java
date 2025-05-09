@@ -29,14 +29,12 @@ public class ChatService {
      * **/
     @Transactional
     public Mono<Void> saveChatMessage(ChatMessage message) {
+        System.out.println("메세지 저장 service");
         System.out.println(">>> 저장 요청 받은 메세지: " + message.getContent());
 
         // 메세지 저장
-        Mono<ChatMessage> chatMessageMono = chatRepository.save(
-            ChatMessage.from(message));
+        //then()은 이 작업이 끝난 후 Mono<Void>로 바꿔주는 리액티브 조작자로, save가 끝난 뒤 아무것도 반환하지 않도록 할 때 유용
+        return chatRepository.save(message).then();
 
-        System.out.println(chatMessageMono);
-
-        return null;
     }
 }
