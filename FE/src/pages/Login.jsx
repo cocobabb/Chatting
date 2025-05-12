@@ -43,8 +43,9 @@ export default function Login() {
       console.log(response);
       const token = response.data.token;
       console.log(token);
-      dispatch(login(token));
+      dispatch(login({ token, username: formData.username }));
       navigate("/chat-rooms");
+      return;
     } catch (error) {
       console.log(error);
       console.error();

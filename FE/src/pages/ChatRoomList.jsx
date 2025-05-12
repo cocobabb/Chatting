@@ -4,21 +4,23 @@ import { useNavigate } from "react-router-dom";
 import ChatRoom from "./ChatRoom";
 
 export default function ChatRoomList() {
+  const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
   const [chatRooms, setChatRooms] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
     const getChatRoomList = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/");
-        return;
-      }
       try {
         const response = await axios.get(
-          import.meta.env.VITE_API_URL + "/chatList",
+          import.meta.env.VITE_API_URL + `/chatList?username=${username}`,
           { headers: { Authorization: "Bearer " + token } }
         );
-        const chatRoomList = response.data.chatRoomList;
+        const chatRoomList = response.data.chatRooms;
         console.log(chatRoomList);
         setChatRooms(chatRoomList);
       } catch (error) {
