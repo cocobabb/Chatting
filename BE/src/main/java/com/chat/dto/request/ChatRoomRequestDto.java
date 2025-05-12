@@ -15,6 +15,9 @@ public class ChatRoomRequestDto {
     @NotBlank
     private String title;
 
+    @NotBlank
+    private String username;
+
     @Builder
     public ChatRoom toEntity () {
         return ChatRoom.builder()

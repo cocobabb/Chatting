@@ -1,6 +1,7 @@
 package com.chat.controller;
 
 import com.chat.dto.request.ChatRoomRequestDto;
+import com.chat.dto.request.GetChatRoomsRequestDto;
 import com.chat.dto.response.ChatRoomResponseDto;
 import com.chat.dto.response.ChatRoomListResponseDto;
 import com.chat.entity.User;
@@ -28,8 +29,9 @@ public class ChatRoomController {
     }
 
     @GetMapping("/chatList")
-    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(@RequestBody @Valid GetChatRoomsRequestDto requestDto) {
 
-        return ResponseEntity.ok().body(chatRoomService.findChatRoomList());
+//        chatRoomService.findChatRoomList(requestDto.getUsername());
+        return ResponseEntity.ok().body(chatRoomService.findChatRoomList(requestDto.getUsername()));
     }
 }

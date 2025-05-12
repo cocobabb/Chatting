@@ -20,7 +20,6 @@ public class ChatMessage {
     private Long roomId;
     private String username;
     private String content;
-    private Long writerId;
 
 
     public static ChatMessage from(ChatMessage chatMessage) {
