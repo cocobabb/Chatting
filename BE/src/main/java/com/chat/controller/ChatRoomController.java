@@ -1,7 +1,6 @@
 package com.chat.controller;
 
 import com.chat.dto.request.ChatRoomRequestDto;
-import com.chat.dto.request.GetChatRoomsRequestDto;
 import com.chat.dto.response.ChatRoomResponseDto;
 import com.chat.dto.response.ChatRoomListResponseDto;
 import com.chat.entity.User;
@@ -14,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,9 +29,8 @@ public class ChatRoomController {
     }
 
     @GetMapping("/chatList")
-    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(@RequestBody @Valid GetChatRoomsRequestDto requestDto) {
+    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(@RequestParam String username) {
 
-//        chatRoomService.findChatRoomList(requestDto.getUsername());
-        return ResponseEntity.ok().body(chatRoomService.findChatRoomList(requestDto.getUsername()));
+        return ResponseEntity.ok().body(chatRoomService.findChatRoomList(username));
     }
 }

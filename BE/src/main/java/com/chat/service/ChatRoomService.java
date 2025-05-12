@@ -39,7 +39,6 @@ public class ChatRoomService {
     }
 
     public ChatRoomListResponseDto findChatRoomList(String username) {
-//        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
         User user = userRepository.findByUsername(username).orElseThrow();
         List<ChatRoomList> chatRoomLists = chatRoomListRepository.findByUser(user);
 
