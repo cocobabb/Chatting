@@ -21,13 +21,5 @@ public class ChatMessage {
     private String username;
     private String content;
 
-
-    public static ChatMessage from(ChatMessage chatMessage) {
-        return ChatMessage.builder()
-            .roomId(chatMessage.getRoomId())
-            .username(chatMessage.getUsername())
-            .content(chatMessage.getContent())
-            .build();
-    }
 }
 

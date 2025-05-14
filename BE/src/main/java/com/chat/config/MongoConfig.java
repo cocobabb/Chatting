@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 
 @Configuration
-//@EnableReactiveMongoAuditing
 public class MongoConfig {
 
     @Value("${spring.data.mongodb.uri}")
@@ -18,4 +17,5 @@ public class MongoConfig {
     public ReactiveMongoTemplate reactiveMongoTemplate() {
         return new ReactiveMongoTemplate(MongoClients.create(mongoUri), "chat");
     }
+
 }
