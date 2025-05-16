@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { format, set } from "date-fns";
 
 export default function ChatRoom() {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ export default function ChatRoom() {
   const token = localStorage.getItem("token");
   const loginedUsername = localStorage.getItem("username");
   const wsRef = useRef(null);
+  const preMsgDate = useRef();
 
   // 채팅 스크롤
   const scrollRef = useRef(null);
@@ -35,7 +37,6 @@ export default function ChatRoom() {
           import.meta.env.VITE_API_URL + `/find/chat/list/${id}`,
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response);
         setPreMsg(response.data);
         // 스크롤을 맨 아래로 이동
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -47,24 +48,19 @@ export default function ChatRoom() {
     getChatMessages();
   }, [id, token]);
 
-  // 웹소켓 연결 및 메세지 렌더링
+  // 웹소켓 연결 및 웹소켓 메세지 렌더링
   useEffect(() => {
-    console.log(id);
-
     const ws = new WebSocket(
       `ws://${import.meta.env.VITE_WS_URL}/${id}?token=${token}`
     );
     wsRef.current = ws;
 
     ws.onmessage = (e) => {
-      console.log("on");
-      console.log(e.data);
-      const [sender, ...rest] = e.data.split(":"); // split은 :을 기준으로 : 앞 요소는 변수로 : 뒤 요소는 배열로 만듦
-      const text = rest.join(""); // 배열에 ""문자열을 더해서 문자열로 만듦
+      const messageData = JSON.parse(e.data);
+      const { id, username, content } = messageData;
+      const timestamp = format(new Date(id.date), "yyyy-MM-dd'T'HH:mm:ss");
 
-      console.log("sender:", sender);
-      console.log("text:", text);
-      setMessages((prev) => [...prev, { sender, text }]);
+      setMessages((prev) => [...prev, { username, content, timestamp }]);
     };
 
     ws.onclose = () => {
@@ -92,6 +88,7 @@ export default function ChatRoom() {
         <div className="max-w-2xl mx-auto mt-10 p-4 border rounded-lg shadow bg-white">
           <h2 className="text-2xl font-bold mb-4">{title}</h2>
           <div className="h-80 overflow-y-auto border p-3 rounded mb-4 bg-gray-50">
+            {/* 이전에 보낸 채팅 기록들 가져오기 */}
             {preMsg.map((data, i) => {
               // 날짜 추출
               const currentDate = data.id.date.split("T")[0];
@@ -104,6 +101,9 @@ export default function ChatRoom() {
 
               const loginedUser = data?.username == loginedUsername;
 
+              if (isNewDate) {
+                preMsgDate.current = currentDate;
+              }
               return (
                 <div key={`pre-${i}`} className="mb-2">
                   {isNewDate && (
@@ -142,12 +142,52 @@ export default function ChatRoom() {
               );
             })}
 
-            {messages.map((msg, i) => (
-              <div key={i} className="mb-2">
-                <span className="font-semibold">{msg?.sender ?? "익명"}</span>:
-                {msg?.text ?? "텍스트 없음"}
-              </div>
-            ))}
+            {/* 실시간 메시지 가져오기 */}
+            {messages.map((msg, i) => {
+              const currentDate = msg.timestamp?.split("T")[0];
+              const previousDate =
+                i > 0 ? messages[i - 1].timestamp?.split("T")[0] : null;
+              const isNewDate = currentDate !== previousDate;
+              const loginedUser = msg.username == loginedUsername;
+
+              const isExistedDate = currentDate !== preMsgDate.current;
+
+              return (
+                <div key={`msg-${i}`} className="mb-2">
+                  {isExistedDate && isNewDate && (
+                    <div
+                      ref={preMsgDate}
+                      className="text-center text-gray-500 font-medium my-2"
+                    >
+                      {currentDate}
+                    </div>
+                  )}
+                  <div
+                    // 로그인한 사용자는 오른쪽 배치 & 초록 채팅박스 , 다른 사용자는 왼쪽 배치 & 회색 채팅박스
+                    className={`border-2 ${
+                      loginedUser ? "border-green-200" : "border-gray-600"
+                    } rounded-xl p-2 flex flex-col ${
+                      loginedUser ? "items-end" : "items-start"
+                    }`}
+                  >
+                    <span className="font-semibold">
+                      {msg?.username ?? "익명"}
+                    </span>
+                    <div
+                      className={`flex 
+                        ${loginedUser ? "flex-row-reverse" : "flex-row"}
+                      `}
+                    >
+                      <span>{msg?.content ?? "내용 없음"}</span>
+                      {"\u00A0"}
+                      <span className="text-gray-500">
+                        {msg.timestamp.split("T")[1].split(".")[0].slice(0, 5)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
 
             <div ref={scrollRef}></div>
           </div>

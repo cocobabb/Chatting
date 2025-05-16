@@ -2,6 +2,7 @@ package com.chat.global.security;
 
 import com.chat.dto.ChatMessage;
 import com.chat.service.ChatService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -20,6 +21,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final ChatService chatService;
     private final ChatSessionManager sessionManager;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
@@ -60,11 +62,25 @@ public class ChatWebSocketHandler implements WebSocketHandler {
     }
 
     private Mono<Void> broadcastToRoom(String roomId, ChatMessage chatMessage) {
-        String payload = chatMessage.getUsername() +":"+ chatMessage.getContent();
-
         return Flux.fromIterable(sessionManager.getSession(roomId))
             .filter(WebSocketSession::isOpen)
-            .flatMap(session -> session.send(Mono.just(session.textMessage(payload))))
+            .flatMap(session ->
+                {
+                    try {
+                        // ChatMessage를 JSON으로 직렬화
+                        // WebSocketSession.send()는 웹소켓 메세지만 받을 수 있으며 그 안의 데이터는 문자열 또는 바이트 바이너리여야 함
+                        String jsonPayload = objectMapper.writeValueAsString(chatMessage);
+                        Mono<WebSocketMessage> messageMono = Mono.just(session.textMessage(jsonPayload));
+                        return  session.send(messageMono);
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        return Mono.empty();
+                    }
+                }
+            )
             .then();
     }
+
+
 }
