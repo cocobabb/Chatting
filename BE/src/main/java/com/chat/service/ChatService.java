@@ -19,7 +19,7 @@ public class ChatService {
     /**
      * 특정 채팅방에 저장된 메세지 리스트 가져오기
      * **/
-    public Flux<ChatMessage> findChatMessageList(Long id) {
+    public Flux<ChatMessage> findChatMessageList(String id) {
         Flux<ChatMessage> chatMessages = chatRepository.findAllByRoomId(id);
         return chatMessages;
     }

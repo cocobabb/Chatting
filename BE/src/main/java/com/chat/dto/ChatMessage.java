@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ChatMessage {
     @Id
     private ObjectId id;
-    private Long roomId;
+    private String roomId;
     private String username;
     private String content;
 

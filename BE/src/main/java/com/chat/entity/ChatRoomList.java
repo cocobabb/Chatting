@@ -22,11 +22,11 @@ public class ChatRoomList {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "chatRoom_id")
+    @JoinColumn(name = "chatRoom_id", nullable = false)
     private ChatRoom chatRoom;
 
     @Builder

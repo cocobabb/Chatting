@@ -21,7 +21,7 @@ public class ChatController {
      * @param id 채팅방 id
      * **/
     @GetMapping("/find/chat/list/{id}")
-    public Flux<ChatMessage> find(@PathVariable("id") Long id) {
+    public Flux<ChatMessage> find(@PathVariable("id") String id) {
         return chatService.findChatMessageList(id);
     }
 

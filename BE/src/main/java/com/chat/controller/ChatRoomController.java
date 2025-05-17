@@ -23,7 +23,7 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @PostMapping("/create")
-    public ResponseEntity<ChatRoomResponseDto> createChatRoom(@RequestBody @Valid ChatRoomRequestDto requestDto, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ChatRoomResponseDto> createChatRoom(@RequestBody @Valid ChatRoomRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(chatRoomService.createChatRoom(requestDto));
     }

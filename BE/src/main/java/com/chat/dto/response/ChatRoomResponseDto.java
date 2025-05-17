@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ChatRoomResponseDto {
-    private final Long id;
+    private final String id;
     private final String title;
 
     public static ChatRoomResponseDto from(ChatRoom chatRoom) {

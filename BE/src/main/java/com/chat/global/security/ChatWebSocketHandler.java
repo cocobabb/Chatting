@@ -48,7 +48,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
                 // MongoDB에 채팅 메세지 저장
                 ChatMessage chatMessage = ChatMessage.builder()
                     .id(new ObjectId())
-                    .roomId(Long.valueOf(roomId))
+                    .roomId(roomId)
                     .username(username)
                     .content(message)
                     .build();
