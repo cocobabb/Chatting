@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { format, set } from "date-fns";
 
@@ -26,6 +26,11 @@ export default function ChatRoom() {
   const location = useLocation();
   const { id, title } = location.state || {};
 
+  // 화면 렌더링 전에 가장 최근 메세지로 포커스 이동
+  useLayoutEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "auto" });
+  }, [preMsg]);
+
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -38,8 +43,6 @@ export default function ChatRoom() {
           { headers: { Authorization: "Bearer " + token } }
         );
         setPreMsg(response.data);
-        // 스크롤을 맨 아래로 이동
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
       } catch (error) {
         console.error(error);
       }
