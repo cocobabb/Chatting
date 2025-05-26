@@ -61,8 +61,7 @@ export default function ChatRoomList() {
 
   function moveToChatRoom(id, title) {
     title = title.replaceAll(" ", "");
-    // encodeURIComponent(String) : 어떤 언어든 안전하게 URL로 변환(URL에서 title 꺠지는 거 방지)
-    navigate(`/chat-rooms/${encodeURIComponent(title)}`, {
+    navigate(`/chat-rooms/${id}`, {
       state: { id, title },
     });
 
