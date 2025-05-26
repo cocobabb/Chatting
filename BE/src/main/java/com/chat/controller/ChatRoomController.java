@@ -1,15 +1,14 @@
 package com.chat.controller;
 
 import com.chat.dto.request.ChatRoomRequestDto;
+import com.chat.dto.request.InviteUserRequestDto;
 import com.chat.dto.response.ChatRoomResponseDto;
 import com.chat.dto.response.ChatRoomListResponseDto;
-import com.chat.entity.User;
 import com.chat.service.ChatRoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,5 +31,11 @@ public class ChatRoomController {
     public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(@RequestParam String username) {
 
         return ResponseEntity.ok().body(chatRoomService.findChatRoomList(username));
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<String> InviteUser(@RequestBody @Valid InviteUserRequestDto requestDto, @RequestParam String username) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(chatRoomService.InviteUser(requestDto, username));
     }
 }

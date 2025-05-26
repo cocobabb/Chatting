@@ -1,6 +1,7 @@
 package com.chat.service;
 
 import com.chat.dto.request.ChatRoomRequestDto;
+import com.chat.dto.request.InviteUserRequestDto;
 import com.chat.dto.response.ChatRoomResponseDto;
 import com.chat.dto.response.ChatRoomListResponseDto;
 import com.chat.entity.ChatRoom;
@@ -44,4 +45,21 @@ public class ChatRoomService {
 
         return ChatRoomListResponseDto.from(chatRoomLists);
     }
+
+    @Transactional
+    public String InviteUser(InviteUserRequestDto requestDto, String username) {
+
+        ChatRoom chatRoom = chatRoomRepository.findById(requestDto.getChatRoomId()).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
+
+        ChatRoomList chatRoomList = ChatRoomList.builder()
+            .chatRoom(chatRoom)
+            .user(user)
+            .build();
+        chatRoomListRepository.save(chatRoomList);
+
+    return "Invite " + username;
+    }
+
+
 }
