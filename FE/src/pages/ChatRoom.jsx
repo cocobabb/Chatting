@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 
 export default function ChatRoom() {
   const navigate = useNavigate();
@@ -13,6 +13,12 @@ export default function ChatRoom() {
 
   // 채팅 스크롤
   const scrollRef = useRef(null);
+
+  // 채팅 초대창
+  const [openModal, setOpenModal] = useState(false);
+
+  // 채팅 초대자
+  const [inviteedUser, setInvitedUser] = useState();
 
   // 저장된 채팅 데이터
   const [preMsg, setPreMsg] = useState([]);
@@ -85,11 +91,61 @@ export default function ChatRoom() {
     }
   };
 
+  const invite = async () => {
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_API_URL + `/invite?username=${inviteedUser}`,
+        { chatRoomId: id },
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      setOpenModal(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="min-h-screen flex items-center justify-center ">
         <div className="max-w-2xl mx-auto mt-10 p-4 border rounded-lg shadow bg-white">
-          <h2 className="text-2xl font-bold mb-4">{title}</h2>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-bold mb-4">{title}</h2>
+            <button
+              className=" h-9 border text-white  bg-orange-500 p-1 rounded-lg"
+              onClick={() => {
+                setOpenModal(true);
+              }}
+            >
+              초대하기
+            </button>
+          </div>
+          {openModal && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50"
+              onClick={() => setOpenModal(false)}
+            >
+              <div
+                className="bg-white p-6 rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h2 className="text-xl font-bold mb-4">
+                  초대 할 사용자 아이디
+                </h2>
+                <input
+                  className="border m-2"
+                  onChange={(e) => setInvitedUser(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") invite();
+                  }}
+                />
+                <button
+                  onClick={invite}
+                  className="bg-orange-500 text-white px-4 py-2 rounded"
+                >
+                  초대
+                </button>
+              </div>
+            </div>
+          )}
           <div className="h-80 overflow-y-auto border p-3 rounded mb-4 bg-gray-50">
             {/* 이전에 보낸 채팅 기록들 가져오기 */}
             {preMsg.map((data, i) => {
